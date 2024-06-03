@@ -4,8 +4,13 @@ from langchain.utilities import SQLDatabase
 from langchain_experimental.sql import SQLDatabaseChain
 from langchain.chains import create_sql_query_chain
 from langchain.chat_models import ChatOpenAI
+<<<<<<< Updated upstream
 from utilities import DB_PATH,META_DATA_PATH
 
+=======
+from utilities import API_KEY,DB_PATH,META_DATA_PATH
+import streamlit as st
+>>>>>>> Stashed changes
 
 
 def modelApi():
