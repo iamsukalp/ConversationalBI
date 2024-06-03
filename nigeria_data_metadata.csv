@@ -1,0 +1,36 @@
+Column,Description,Data Type
+Fin_Year,Financial Year,object
+Company,Name of the Company,object
+Month,Month as a number,int64
+Month_Name,Name of the Month,object
+Customer_No,Customer Number,object
+Customer_Name,Name of the Customer,object
+Customer_Channel,Channel of the Customer,object
+Item_Channel,Channel of the Item,object
+Payment_Type,Type of Payment,object
+Customer_Type,Type of Customer,object
+Channel,Sales Channel,object
+Destination,Sales Destination,object
+Customer_Group,Group of the Customer,object
+Customer_Sub_Group,Sub-Group of the Customer,object
+Sales_Person_Code,Code of the Sales Person,object
+Sales_Person,Name of the Sales Person,object
+Regional_Manager,Name of the Regional Manager,object
+Territory,Territory Name,object
+Therapeutic_Category,Category of Therapeutics,object
+Brand,Brand Name,object
+Marketing_Division,Marketing Division,object
+Sales_Division,Sales Division,object
+Item_Name,Name of the Item,object
+Item_No,Number of the Item,int64
+Location_Code,Code of the Location,object
+Location_Name,Name of the Location,object
+Gross_Quantity,Gross Quantity of Items Sold,int64
+Free_Qty,Quantity of Free Items,int64
+Net_Sales_Amount_LCY,Net Sales Amount in Local Currency,int64
+Net_Sales_Amount_USD,Net Sales Amount in USD,int64
+Cost_Amount,Cost Amount,float64
+Cost_Amount_ACY,Cost Amount in Another Currency,float64
+Average_Rate,Average Rate,int64
+Average_Rate_Sales_Amount,Average Rate of Sales Amount,float64
+Average_Rate_Cost_Amount,Average Rate of Cost Amount,float64
