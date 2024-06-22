@@ -1,35 +1,72 @@
 import streamlit as st
-from insight_generation import get_insight
-from default_component import default_component
+import firebase_admin
+from firebase_admin import credentials, db
+from utilities import FIREBASE_CERT_CONFIG
 
-def chat_component(prompt):
-    # Initialize chat history
+
+def initialize_firebase():
+    if not firebase_admin._apps:
+        cred = credentials.Certificate(FIREBASE_CERT_CONFIG)
+        firebase_admin.initialize_app(
+            cred,
+            {"databaseURL": "https://conversationalbi-default-rtdb.firebaseio.com"},
+        )
+
+
+initialize_firebase()
+
+
+def initialize_chat(conversation_key):
     if "messages" not in st.session_state:
-        st.session_state.messages = []
-        default_component()
+        if conversation_key:
+            st.session_state.messages = load_chat_history(conversation_key)
+            st.session_state.conversation_key = conversation_key
+        else:
+            st.session_state.messages = []
+            new_ref = db.reference("chats").push({})
+            st.session_state.conversation_key = new_ref.key
+    print("Initialized chat with key:", st.session_state.conversation_key)
 
-    # Display chat messages from history on app rerun
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
 
-    # Accept user input
+def load_chat_history(conversation_key):
+    ref = db.reference(f"chats/{conversation_key}")
+    data = ref.get()
+    if data:
+        return data
+    return []
+
+
+def save_chat_history(conversation_key):
+    ref = db.reference(f"chats/{conversation_key}")
+    ref.set(st.session_state.messages)
+
+
+def chat_component(prompt, insight, conversation_key, def_message):
+    initialize_chat(conversation_key)
+    print("Chat component loaded with conversation key:", conversation_key)
+
+    if len(st.session_state.messages) == 0:
+        st.markdown(def_message)
+    else:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
     if prompt:
-        # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
-        # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        response = get_insight(prompt)
-
-        # Display assistant response in chat message container
+        st.session_state.messages.append({"role": "assistant", "content": insight})
         with st.chat_message("assistant"):
-            st.markdown(response)
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response})
-        print(st.session_state.messages)
+            st.markdown(insight)
+
+        save_chat_history(st.session_state.conversation_key)
 
 
-
-    
+def clear_conversation():
+    save_chat_history(st.session_state.conversation_key)
+    st.session_state.messages = []
+    new_ref = db.reference("chats").push({})
+    st.session_state.conversation_key = new_ref.key
+    print("Cleared conversation, new key:", st.session_state.conversation_key)
